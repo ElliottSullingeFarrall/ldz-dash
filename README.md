@@ -8,7 +8,7 @@ The web app has been designed to be easily deployed via [PythonAnywhere](https:/
 
 Start by opening a terminal in the location (henceforth referred to as `<repo>`) where you would like to install the application and run
 ```bash
-git clone https://github.com/ElliottSullingeFarrall/LDZ-Apps.git
+git clone https://github.com/ElliottSullingeFarrall/ldz-dash.git
 ```
 to clone the repository. If you don't have enough space to clone the repository, try using the `--depth` option for `git clone`.
 
