@@ -1,0 +1,28 @@
+.charts .select input,
+.charts .select select {
+    float: right;
+
+    margin: 5px;
+    padding: 10px;
+
+    border: 1px solid;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+.charts .chart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    margin: auto;
+
+    transition: opacity 0.3s;
+
+    aspect-ratio: 1;
+}
+
+.charts .hide {
+    opacity: 0;
+}

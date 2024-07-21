@@ -1,0 +1,57 @@
+{% extends "_layout.html" %}
+
+{% block main %}
+<div class="charts">
+  <div class="select">
+    <input name="year" type="number" min="1970" max="{{ current_year }}" step="1">
+  </div>
+  {% for category in options %}
+  {% for type in options[category] %}
+  <div id="{{ category }}:{{ type|safe }}" class="chart"></div>
+  {% endfor %}
+  {% endfor %}
+</div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+  let delay = parseFloat(window.getComputedStyle(document.querySelector('.chart')).transitionDuration) * 1000;
+
+  {% for category in options %}
+  {% set outer_loop_index = loop.index %}
+  {% for type in options[category] %}
+  function chart_{{ outer_loop_index }}_{{ loop.index }}() {
+    let year = document.querySelector('input[name="year"]').value;
+
+    let url = `{{ url_for('home.charts') }}/{{ category }}/{{ type|safe }}/${year}`;
+
+    let chart = document.getElementById('{{ category }}:{{ type|safe }}');
+    chart.classList.toggle('hide');
+
+    setTimeout(() => {
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          let config = {displayModeBar: false};
+
+          Plotly.newPlot(chart, data.data, data.layout, config);
+
+          setTimeout(() => {
+            chart.classList.toggle('hide');
+          }, delay);
+        })
+        .catch(error => console.error('Error:', error));
+    }, delay); 
+  }
+  document.querySelector('input[name="year"]').addEventListener('change', chart_{{ outer_loop_index }}_{{ loop.index }});
+  {% endfor %}
+  {% endfor %}
+
+  document.querySelector('input[name="year"]').value = new Date().getFullYear();
+  {% for category in options %}
+  {% set outer_loop_index = loop.index %}
+  {% for type in options[category] %}
+  chart_{{ outer_loop_index }}_{{ loop.index }}();
+  {% endfor %}
+  {% endfor %}
+</script>
+{% endblock %}

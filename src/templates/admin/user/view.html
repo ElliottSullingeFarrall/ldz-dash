@@ -1,0 +1,37 @@
+{% extends "_layout.html" %}
+
+{% block main %}
+<table class="table">
+    <thead>
+        <tr>
+        {% for header in headers %}
+            <th>{{  header  }}</th>
+        {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in table %}
+        <tr onclick="edit(this)">
+        {% for entry in row %}
+            <td>{{ entry }}</td>
+        {% endfor %}
+        </tr>
+        {% endfor %}
+        <tr onclick="add()">
+            <td colspan="100%">+</td>
+        </tr>
+    </tbody>
+</table>
+
+<script>
+    function add() {
+        url = "{{ url_for('admin.user_add') }}";
+        window.location.replace(url);
+    }
+    function edit(row) {
+        idx = row.rowIndex - 1;
+        url = `{{ url_for('admin.user_edit', idx='') }}/${idx}`;
+        window.location.replace(url);
+    }
+</script>
+{% endblock %}

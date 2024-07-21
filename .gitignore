@@ -1,0 +1,10 @@
+.direnv
+.venv
+
+*.pyc
+__pycache__/
+
+config.py
+
+data/*
+*.log
