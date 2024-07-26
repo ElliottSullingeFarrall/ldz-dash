@@ -1,3 +1,8 @@
+.chart-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .chart-container .select input,
 .chart-container .select select {
     float: right;
@@ -33,10 +38,14 @@
     opacity: 0;
 }
 
-
-/* Media query for wider screens */
-@media (min-width: 768px) {
+/* Media queries for wider screens */
+@media (min-width: 800px) {
     .chart-container .chart {
         width: calc(50% - 10px); /* Two charts per row */
+    }
+}
+@media (min-width: 1600px) {
+    .chart-container .chart {
+        width: calc(25% - 10px); /* Four charts per row */
     }
 }
