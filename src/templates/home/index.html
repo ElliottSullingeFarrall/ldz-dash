@@ -52,7 +52,6 @@
   {% for category in options %}
   {% set outer_loop_index = loop.index %}
   {% for type in options[category] %}
-  window.addEventListener('resize', chart_{{ outer_loop_index }}_{{ loop.index }});
   chart_{{ outer_loop_index }}_{{ loop.index }}();
   {% endfor %}
   {% endfor %}
