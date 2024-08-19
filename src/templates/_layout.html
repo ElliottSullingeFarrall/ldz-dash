@@ -1,49 +1,51 @@
-{% extends "_base.html" %} {% block body %}
+{% extends "_base.html" %}
+
+{% block body %}
 <div class="topnav">
-  <div id="group_left">
-    <div class="button" onclick="openSide()">&#9776;</div>
-  </div>
-  <div id="group_right">
-    {% if current_user.admin %}
-    <div class="menu">
-      <div class="button">admin &#x25BC;</div>
-      <div class="content">
-        <a class="item" href="{{ url_for('admin.data') }}">data</a>
-        <a class="item" href="{{ url_for('admin.user_view') }}">users</a>
-      </div>
+    <div id="group_left">
+        <div class="button" onclick="openSide()">&#9776;</div>
     </div>
-    {% endif %}
-    <div class="menu">
-      <div class="button">{{ current_user.username }} &#x25BC;</div>
-      <div class="content">
-        <a class="item" href="{{ url_for('user.settings') }}">settings</a>
-        <a class="item" href="{{ url_for('auth.login') }}">logout</a>
-      </div>
+    <div id="group_right">
+        {% if current_user.admin %}
+        <div class="menu">
+            <div class="button">admin &#x25BC;</div>
+            <div class="content">
+                <a class="item" href="{{ url_for('admin.data') }}">data</a>
+                <a class="item" href="{{ url_for('admin.user_view') }}">users</a>
+            </div>
+        </div>
+        {% endif %}
+        <div class="menu">
+            <div class="button">{{ current_user.username }} &#x25BC;</div>
+            <div class="content">
+                <a class="item" href="{{ url_for('user.settings') }}">settings</a>
+                <a class="item" href="{{ url_for('auth.login') }}">logout</a>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <div class="sidenav">
-  <div class="button" onclick="closeSide()">&times;</div>
-  <a class="item" href="{{ url_for('home.index') }}">Home</a>
-  {% for category in categories %}
-  <div class="sep">{{ category|capitalize }}</div>
-  {% for type in categories[category] %}
-  <a class="item" href="{{ url_for('data.add', category=category, type=type) }}"
-    >{{ type|upper }}</a
-  >
-  {% endfor %} {% endfor %}
+    <div class="button" onclick="closeSide()">&times;</div>
+    <a class ="item" href="{{ url_for('home.index') }}">Home</a>
+    {% for category in options %}
+    <div class="sep">{{ category|capitalize }}</div>
+    {% for type in options[category] %}
+    <a class="item" href="{{ url_for('data.add', category=category, type=type) }}">{{ type|upper }}</a>
+    {% endfor %}
+    {% endfor %}
 </div>
 
-<div id="main">{% block main %}{% endblock %}</div>
+<div id="main">
+    {% block main %}{% endblock %}
+</div>
 
 <script>
-  const sidenav = document.getElementsByClassName("sidenav")[0];
-  function openSide() {
-    sidenav.classList.add("sidenav-open");
-  }
-  function closeSide() {
-    sidenav.classList.remove("sidenav-open");
-  }
+    function openSide() {
+        document.getElementsByClassName("sidenav")[0].style.width = "200px";
+    }
+    function closeSide() {
+        document.getElementsByClassName("sidenav")[0].style.width = "0";
+    }
 </script>
 {% endblock %}

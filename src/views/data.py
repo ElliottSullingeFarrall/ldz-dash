@@ -1,31 +1,28 @@
-from flask import Blueprint, redirect, render_template, request, url_for
+from .. import *
 
-from src.data import Data
+data = App.blueprint(__name__, __file__)
 
-from . import View, confirm_required, login_required
-
-data = Blueprint("data", __name__, template_folder="../templates/data")
-
-@data.route("/<category>/<type>", methods=["GET", "POST"])
-@login_required
-def add(category: str, type: str) -> View:
-    if request.method == "POST":
+@data.route('/<category>/<type>', methods=['GET', 'POST'])
+@App.login_required
+def add(category, type):
+    if request.method == 'POST':
         with Data(category, type) as data:
-            data.append(request.form)
-        return redirect(url_for(".add", category=category, type=type))
+            data.add(request.form)
+        return redirect(url_for('.add', category=category, type=type))
+    
+    return render_template(f'{category}/{type}.html', category=category, type=type)
 
-    return render_template(f"{category}/{type}.html", category=category, type=type)
-
-@data.route("/<category>/<type>/view")
-@login_required
-def edit(category: str, type: str) -> View:
+@data.route('/<category>/<type>/view')
+@App.login_required
+def edit(category, type):
     with Data(category, type) as data:
-        return render_template("edit.html", category=category, type=type, headers=data.df.columns, table=data.df.values)
+        return render_template('edit.html', category=category, type=type, headers=data.df.columns, table=data.df.values)
 
-@data.route("/<category>/<type>/remove/<int:idx>", methods=["GET", "POST"])
-@login_required
-@confirm_required
-def remove(category: str, type: str, idx: int) -> View:
+@data.route('/<category>/<type>/remove')    
+@data.route('/<category>/<type>/remove/<idx>', methods=['GET', 'POST'])
+@App.login_required
+@App.confirm_required
+def remove(category, type, idx=None):
     with Data(category, type) as data:
-        del data[idx]
-    return redirect(url_for(".edit", category=category, type=type))
+        data.remove(int(idx))
+        return redirect(url_for('.edit', category=category, type=type))

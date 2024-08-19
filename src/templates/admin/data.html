@@ -1,57 +1,55 @@
-{% extends "_layout.html" %} {% block main %}
+{% extends "_layout.html" %}
+
+{% block main %}
 <h1>Download Data</h1>
 <form method="POST" action="{{ url_for('admin.data') }}" onsubmit="redirect()">
-  <div class="row">
-    <div>
-      <label>Month:</label>
-      <input name="month" type="month" required />
+    <div class="row">
+        <div>
+            <label>Month:</label>
+            <input name="month" type="month" required>
+        </div>
+        <div>
+            <label>Type:</label>
+            <select name="category:type" required>
+            {% for category in options %}
+                <optgroup label="{{ category|capitalize }}">
+                {% for type in options[category] %}
+                    <option value="{{ category }}:{{ type }}">{{ type|upper }}</option>
+                {% endfor %}
+                </optgroup>
+            {% endfor %}
+            </select>
+        </div>
     </div>
-    <div>
-      <label>Type:</label>
-      <select name="category:type" required>
-        {% for category in categories %}
-        <optgroup label="{{ category|capitalize }}">
-          {% for type in categories[category] %}
-          <option value="{{ category }}:{{ type }}">{{ type|upper }}</option>
-          {% endfor %}
-        </optgroup>
-        {% endfor %}
-      </select>
+    <div class="row">
+        <div>
+            <label>Users:</label>
+            <select name="users" id="users" multiple required>
+            {% for user in users %}
+                <option value="{{ user }}">{{ user }}</option>
+            {% endfor %}
+            </select>
+        </div>
     </div>
-  </div>
-  <div class="row">
-    <div>
-      <label>Users:</label>
-      <select name="users" id="users" multiple required>
-        {% for username in users %}
-        <option value="{{ username }}">{{ username }} ({{ users[username] }})</option>
-        {% endfor %}
-      </select>
-    </div>
-  </div>
 
-  <input value="Download" type="submit" />
+    <input value="Download" type="submit">
 </form>
 
 <script>
-  const month_select = document.querySelector("input[name='month']");
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  month_select.value = `${year}-${month}`;;
+    function redirect() {
+        setTimeout(function() {
+            window.location.href = "{{ url_for('home.index') }}";
+        }, 50); // delay (ms) | Debug: > 25 | Deploy: > 50
+    }
 
-  function redirect() {
-    setTimeout(() => {
-      window.location.href = "{{ url_for('home.index') }}";
-    }, 50); // delay (ms) | Local: > 25 | Production: > 50
-  }
+    $('#users').multiselect({
+        includeSelectAllOption: true,
+        selectAllText: 'Select All',
+        nonSelectedText: 'None selected',
+        nSelectedText: 'selected',
+        allSelectedText: 'All selected',
+    });
 
-  $("#users").multiselect({
-    includeSelectAllOption: true,
-    selectAllText: "Select All",
-    nonSelectedText: "None Selected",
-    nSelectedText: "Selected",
-    allSelectedText: "All Selected",
-  });
+    document.querySelector('input[name="month"]').value = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}`;
 </script>
 {% endblock %}
