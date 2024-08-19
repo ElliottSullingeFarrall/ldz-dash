@@ -1,17 +1,23 @@
-from .. import *
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import current_user  # type: ignore
 
-auth = App.blueprint(__name__, __file__)
+from src.user import UserException, users
 
-@auth.route('/login', methods=['GET', 'POST'])
-def login():
+from . import View
+
+auth = Blueprint("auth", __name__, template_folder="../templates/auth")
+
+@auth.route("/login", methods=["GET", "POST"])
+def login() -> View:
     if current_user:
-        User.logout()
-     
-    if request.method == 'POST':
-        error = User.login(request.form)
-        if not error:
-            return redirect(url_for('home.index'))
-        else:
-            flash(error)
+        users.logout()
 
-    return render_template('login.html')
+    if request.method == "POST":
+        try:
+            users.login(request.form)
+        except UserException as error:
+            flash(error.message)
+        else:
+            return redirect(url_for("home.index"))
+
+    return render_template("login.html")

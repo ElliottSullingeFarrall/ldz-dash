@@ -6,21 +6,14 @@ form {
   text-align: left;
 
   border-radius: 5px;
-  background-color: var(--bg);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-
-  --bg: var(--text1);
-  --txt: var(--text1);
-  --submit-bg: var(--button_inactive);
-  --submit-active: var(--button_active);
-  --button-bg: var(--text2);
-  --button-active: var(--text3);
+  background-color: var(--tertiary);
+  box-shadow: 0 2px 5px var(--shadow);
 }
 
 form .row {
   display: grid;
 
-  grid-template-columns: repeat(auto-fit, minmax( 0, 1fr) );
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
   gap: 0.5em;
 }
 
@@ -54,7 +47,7 @@ form select {
 
   border: 1px solid;
   border-radius: 5px;
-  background-color: #ffffff;
+  background-color: var(--background);
 }
 
 form input[type="button"],
@@ -65,27 +58,27 @@ form input[type="submit"] {
 
   cursor: pointer;
 
-  color: var(--txt);
+  color: var(--text_tertiary);
   border: none;
   border-radius: 5px;
 }
 
 form input[type="button"] {
-  background-color: var(--button-bg);
+  background-color: var(--button_secondary_inactive);
 }
 
 form input[type="submit"] {
-  background-color: var(--submit-bg);
+  background-color: var(--button_primary_inactive);
 }
 
 form input[type="button"]:hover,
 form input[type="button"]:active {
-  background-color: var(--button-active);
+  background-color: var(--button_secondary_active);
 }
 
 form input[type="submit"]:hover,
 form input[type="submit"]:active {
-  background-color: var(--submit-active);
+  background-color: var(--button_primary_active);
 }
 
 /* ------------------------------ multi-select ------------------------------ */
@@ -102,7 +95,7 @@ form .btn-group .multiselect {
 
   border: 1px solid;
   border-radius: 5px;
-  background-color: #ffffff;
+  background-color: var(--background);
 }
 
 form .btn-group .dropdown-menu {
@@ -112,7 +105,7 @@ form .btn-group .dropdown-menu {
 
   border: 1px solid;
   border-radius: 5px;
-  background-color: #ffffff;
+  background-color: var(--background);
 }
 
 form .btn-group.open .dropdown-menu {
@@ -130,5 +123,5 @@ form .btn-group .multiselect-container li a input[type="checkbox"] {
 }
 
 form .btn-group .multiselect-container li:hover {
-  background-color: #099af2;
+  background-color: var(--button_primary_inactive);
 }

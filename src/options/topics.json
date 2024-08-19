@@ -1,0 +1,64 @@
+{
+  "AS&D": {
+    "Assessment": [
+      "Annotated bibliography",
+      "Research proposal",
+      "Critical Article review",
+      "Presentations, Posters and digital assessment (videos etc.)",
+      "Reflective writing",
+      "Writing (reports, essays, etc.), incl. structure, paraphrasing, linking, clarity, concision, citation)",
+      "Writing a literature review"
+    ],
+    "Assessment process/task": [
+      "Assignment planning",
+      "Choosing topic/finding focus (dissertations)",
+      "Interpreting criteria",
+      "Interpreting feedback",
+      "Interpreting Turnitin reports",
+      "Literature surveys and systematic reviews",
+      "Referencing",
+      "Search strategies/identifying literature",
+      "Sourcing and selecting evidence"
+    ],
+    "Academic Skills": [
+      "Academic integrity referral",
+      "Group or teamworking, peer-based learning",
+      "Planning and organising time",
+      "Reading and note-making strategies",
+      "Using referencing software",
+      "Research design / methods/ology",
+      "Revision and exam strategies"
+    ],
+    "Critical thinking": [
+      "Analysis/Writing (synthesis, evaluation, argument, position, voice)",
+      "Evaluating information/engaging with literature",
+      "Using evaluative judgement (making sense, making meaning)"
+    ],
+    "Learning journey": [
+      "Service introduction for new students",
+      "Transition between years/PTY/professional statements or applications",
+      "Transition to university/UK academic setting"
+    ]
+  },
+  "MASA": {
+    "Maths": [
+      "Algebra",
+      "Calculus",
+      "Complex Numbers",
+      "Numeracy",
+      "Trigonometry",
+      "Other"
+    ],
+    "Statistics": [
+      "Data Collection/Handling",
+      "Data Presentation/Writing Up Results",
+      "Statistical Testing",
+      "Statistical Theory",
+      "Probability",
+      "Sample Size Calculations",
+      "Understanding Research Papers",
+      "Other"
+    ],
+    "Softare": ["Excel", "GraphPad", "Jamovi", "Matlab", "R", "SPSS", "Other"]
+  }
+}

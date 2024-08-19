@@ -1,10 +1,11 @@
-.direnv
 .venv
+.direnv
+.pre-commit-config.yaml
 
-*.pyc
-__pycache__/
+__pycache__
+.mypy_cache
+.ruff_cache
 
-config.py
-
+.env
 data/*
 *.log

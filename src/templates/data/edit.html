@@ -1,30 +1,30 @@
-{% extends "_layout.html" %}
-
-{% block main %}
+{% extends "_layout.html" %} {% block main %}
 <table class="table">
-    <thead>
-        <tr>
-        {% for header in headers %}
-            <th>{{ header }}</th>
-        {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
+  <thead>
+    <tr>
+      {% for header in headers %}
+      <th>{{ header }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
     {% for row in table %}
-        <tr onclick="remove(this)">
-        {% for entry in row %}
-            <td>{{ entry }}</td>
-        {% endfor %}
-        </tr>
+    <tr onclick="remove(this)">
+      {% for entry in row %}
+      <td>{{ entry }}</td>
+      {% endfor %}
+    </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>
 
 <script>
-    function remove(row) {
-        idx = row.rowIndex - 1;
-        url = `{{ url_for('data.remove', category=category, type=type) }}/${idx}`;
-        window.location.replace(url);
-    }
+  function remove(row) {
+    const idx = row.rowIndex - 1;
+    let url =
+      "{{ url_for('data.remove', category=category, type=type, idx=0) }}";
+    url = url.replace("0", idx);
+    window.location.replace(url);
+  }
 </script>
 {% endblock %}
