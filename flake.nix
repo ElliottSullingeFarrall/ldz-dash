@@ -1,10 +1,19 @@
 {
   inputs = {
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixos-23.11";
+      url = "github:NixOS/nixpkgs/nixos-unstable";
     };
-    flake-utils = {
-      url = "github:numtide/flake-utils";
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     poetry2nix = {
       url = "github:nix-community/poetry2nix";
@@ -12,31 +21,15 @@
     };
   };
 
-  outputs = inputs: inputs.flake-utils.lib.eachDefaultSystem (system:
-  let
-    pkgs = inputs.nixpkgs.legacyPackages.${system};
-  in
-  {
-    devShells.default = pkgs.mkShell {
-      name = "poetry";
+  outputs = inputs: inputs.snowfall-lib.mkFlake {
+    inherit inputs;
+    src = ./.;
 
-      packages = with pkgs; [
-        inotify-tools
+    snowfall.namespace = "<package>";
+    alias.shells.default = "python";
 
-        openssl
-        (uwsgi.override { plugins = [ "python3" ]; })
-
-        poetry
-        python3
-      ];
-      
-      LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib";
-
-      POETRY_VIRTUALENVS_IN_PROJECT = true;
-      shellHook = ''
-        poetry env use $(which python)
-        poetry install --no-root
-      '';
+    outputs-builder = channels: {
+      formatter = inputs.treefmt-nix.lib.mkWrapper channels.nixpkgs ./treefmt.nix;
     };
-  });
+  };
 }

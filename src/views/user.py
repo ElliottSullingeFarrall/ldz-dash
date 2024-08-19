@@ -1,15 +1,20 @@
-from .. import *
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-user = App.blueprint(__name__, __file__)
+from src.user import UserException, users
 
-@user.route('/settings', methods=['GET', 'POST'])
-@App.login_required
-def settings():
-    if request.method == 'POST':
-        error = User.change_password(request.form)
-        if not error:
-            return redirect(url_for('main.home'))
+from . import View, login_required
+
+user = Blueprint("user", __name__, template_folder="../templates/user")
+
+@user.route("/settings", methods=["GET", "POST"])
+@login_required
+def settings() -> View:
+    if request.method == "POST":
+        try:
+            users.change_password(request.form)
+        except UserException as error:
+            flash(error.message)
         else:
-            flash(error)
+            return redirect(url_for("main.home"))
 
-    return render_template('settings.html')
+    return render_template("settings.html")
