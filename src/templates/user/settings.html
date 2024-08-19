@@ -1,21 +1,26 @@
-{% extends "_layout.html" %} {% block main %}
+{% extends "_layout.html" %}
+
+{% block main %}
 <h1>Change Password</h1>
 <form method="POST" action="{{ url_for('user.settings') }}">
-  <label>Old Password:</label>
-  <input name="password_old" type="password" required />
+    <label>Old Password:</label>
+    <input name="password_old" type="password" required>
 
-  <label>New Password:</label>
-  <input name="password_new" type="password" required />
+    <label>New Password:</label>
+    <input name="password_new" type="password" required>
 
-  <label>Confirm Password:</label>
-  <input name="password_check" type="password" required />
+    <label>Confirm Password:</label>
+    <input name="password_check" type="password" required>
 
-  <input value="Change" type="submit" />
+    <input value="Change" type="submit">
 </form>
-{% with messages = get_flashed_messages() %} {% if messages %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
 <ul class="flash">
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
+{% for message in messages %}
+    <li>{{ message }}</li>
+{% endfor %}
 </ul>
-{% endif %} {% endwith %} {% endblock %}
+{% endif %}
+{% endwith %}
+{% endblock %}
