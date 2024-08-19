@@ -1,5 +1,5 @@
-.chart-container .select input,
-.chart-container .select select {
+.charts .select input,
+.charts .select select {
     float: right;
 
     margin: 5px;
@@ -10,13 +10,7 @@
     background-color: #ffffff;
 }
 
-.chart-container .charts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.chart-container .chart {
+.charts .chart {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -29,14 +23,6 @@
     aspect-ratio: 1;
 }
 
-.chart-container .hide {
+.charts .hide {
     opacity: 0;
-}
-
-
-/* Media query for wider screens */
-@media (min-width: 768px) {
-    .chart-container .chart {
-        width: calc(50% - 10px); /* Two charts per row */
-    }
 }

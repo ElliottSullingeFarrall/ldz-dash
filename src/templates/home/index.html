@@ -1,17 +1,15 @@
 {% extends "_layout.html" %}
 
 {% block main %}
-<div class="chart-container">
+<div class="charts">
   <div class="select">
     <input name="year" type="number" min="1970" max="{{ current_year }}" step="1">
   </div>
-  <div class="charts">
-    {% for category in options %}
-    {% for type in options[category] %}
-    <div id="{{ category }}:{{ type|safe }}" class="chart"></div>
-    {% endfor %}
-    {% endfor %}
-  </div>
+  {% for category in options %}
+  {% for type in options[category] %}
+  <div id="{{ category }}:{{ type|safe }}" class="chart"></div>
+  {% endfor %}
+  {% endfor %}
 </div>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
