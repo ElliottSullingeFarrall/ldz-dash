@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from calendar import month_abbr
 from datetime import datetime
 from html import unescape
 from pathlib import Path
 from types import TracebackType
-from typing import Optional, Self
+from typing import Optional
 
 from flask_login import current_user  # type: ignore
 from pandas import DataFrame, concat, read_csv, to_datetime
@@ -33,7 +35,7 @@ class Data:
 
         self.path = (self.data_dir / self.username / category / unescape(type)).with_suffix(".csv")
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> Data:
         if self.path.exists():
             try:
                 self.df = read_csv(self.path, index_col=False)
