@@ -10,7 +10,7 @@ mkShell {
 
   buildInputs = inputs.self.checks.${system}.pre-commit.enabledPackages;
   packages = with pkgs; [
-    python3
+    python311
     poetry
     ruff
 
