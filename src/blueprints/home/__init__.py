@@ -1,16 +1,17 @@
 from flask import Blueprint, jsonify, render_template
 
 from src.data import Data
-from src.settings import TEMPLATES_DIR
 
-from . import View, login_required
+from ..utils import View, login_required, TEMPLATES_DIR
 
-home = Blueprint("home", __name__, url_prefix="/home", template_folder=TEMPLATES_DIR / "home")
+TEMPLATES_DIR = TEMPLATES_DIR / "home"
+
+home = Blueprint("home", __name__, url_prefix="/home")
 
 @home.route("/")
 @login_required
 def index() -> View:
-    return render_template("index.html")
+    return render_template(str(TEMPLATES_DIR / "index.html"))
 
 @home.route("/charts/<category>/<type>/<int:year>", methods=["GET"])
 @login_required

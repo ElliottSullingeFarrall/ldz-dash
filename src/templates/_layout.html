@@ -8,16 +8,18 @@
     <div class="menu">
       <div class="button">admin &#x25BC;</div>
       <div class="content">
-        <a class="item" href="{{ url_for('admin.data.download') }}">data</a>
-        <a class="item" href="{{ url_for('admin.user.view') }}">users</a>
+        <a class="item" href="{{ url_for('root.admin.data.download') }}"
+          >data</a
+        >
+        <a class="item" href="{{ url_for('root.admin.user.view') }}">users</a>
       </div>
     </div>
     {% endif %}
     <div class="menu">
       <div class="button">{{ current_user.username }} &#x25BC;</div>
       <div class="content">
-        <a class="item" href="{{ url_for('user.settings') }}">settings</a>
-        <a class="item" href="{{ url_for('auth.login') }}">logout</a>
+        <a class="item" href="{{ url_for('root.user.settings') }}">settings</a>
+        <a class="item" href="{{ url_for('root.auth.login') }}">logout</a>
       </div>
     </div>
   </div>
@@ -25,11 +27,13 @@
 
 <div class="sidenav">
   <div class="button" onclick="closeSide()">&times;</div>
-  <a class="item" href="{{ url_for('home.index') }}">Home</a>
+  <a class="item" href="{{ url_for('root.home.index') }}">Home</a>
   {% for category in categories %}
   <div class="sep">{{ category|capitalize }}</div>
   {% for type in categories[category] %}
-  <a class="item" href="{{ url_for('data.add', category=category, type=type) }}"
+  <a
+    class="item"
+    href="{{ url_for('root.data.add', category=category, type=type) }}"
     >{{ type|upper }}</a
   >
   {% endfor %} {% endfor %}

@@ -23,12 +23,12 @@
 
 <script>
   function add() {
-    let url = "{{ url_for('admin.user.add') }}";
+    let url = "{{ url_for('.add') }}";
     window.location.replace(url);
   }
   function edit(row) {
     const idx = row.rowIndex - 1;
-    let url = "{{ url_for('admin.user.edit', idx=0) }}";
+    let url = "{{ url_for('.edit', idx=0) }}";
     url = url.replace("0", idx);
     window.location.replace(url);
   }

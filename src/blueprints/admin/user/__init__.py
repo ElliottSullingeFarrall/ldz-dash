@@ -1,33 +1,31 @@
-from flask import (
-    Blueprint, flash, redirect, render_template, request, url_for,
-)
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from .. import View, admin_required, confirm_required
-from src.settings import TEMPLATES_DIR
 from src.user import UserException, current_user, users
 
-user = Blueprint("user", __name__, url_prefix="/user", template_folder=TEMPLATES_DIR / "admin"/ "user")
+from ...utils import TEMPLATES_DIR, View, admin_required, confirm_required
+
+TEMPLATES_DIR = TEMPLATES_DIR / "admin" / "user"
+
+user = Blueprint("user", __name__, url_prefix="/user")
 
 @user.route("/")
 @admin_required
 def view() -> View:
     table = users.table_view
-    return render_template("view.html", headers=table.columns, table=table.values)
+    return render_template(str(TEMPLATES_DIR / "view.html"), headers=table.columns, table=table.values)
 
 @user.route("/add", methods=["GET", "POST"])
 @admin_required
 def add() -> View:
     if request.method == "POST":
         try:
-            print(request.form)
             users.append(request.form)
-            print(users)
         except UserException as error:
             flash(error.message)
         else:
             return redirect(url_for(".view"))
 
-    return render_template("add.html")
+    return render_template(str(TEMPLATES_DIR / "add.html"))
 
 @user.route("/import", methods=["GET", "POST"])
 @admin_required
@@ -40,7 +38,7 @@ def _import() -> View:
         else:
             return redirect(url_for(".view"))
 
-    return render_template("import.html")
+    return render_template(str(TEMPLATES_DIR / "import.html"))
 
 @user.route("/edit/<int:idx>", methods=["GET", "POST"])
 @admin_required
@@ -57,7 +55,7 @@ def edit(idx: int) -> View:
     if user == current_user:
         return redirect(url_for(".view"))
 
-    return render_template("edit.html", idx=idx)
+    return render_template(str(TEMPLATES_DIR / "edit.html"), idx=idx)
 
 @user.route("/remove/<int:idx>", methods=["GET", "POST"])
 @admin_required

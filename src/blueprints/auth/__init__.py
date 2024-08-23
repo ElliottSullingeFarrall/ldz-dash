@@ -1,11 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from src.settings import TEMPLATES_DIR
 from src.user import UserException, current_user, users
 
-from . import View
+from ..utils import View, TEMPLATES_DIR
 
-auth = Blueprint("auth", __name__, url_prefix="/auth", template_folder=TEMPLATES_DIR / "auth")
+auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 @auth.route("/login", methods=["GET", "POST"])
 def login() -> View:
@@ -18,6 +17,6 @@ def login() -> View:
         except UserException as error:
             flash(error.message)
         else:
-            return redirect(url_for("home.index"))
+            return redirect(url_for("root.home.index"))
 
-    return render_template("login.html")
+    return render_template(str(TEMPLATES_DIR / "login.html"))

@@ -1,9 +1,12 @@
 from functools import wraps
+from pathlib import Path
 
 from flask import redirect, render_template, request, url_for
 from werkzeug import Response
 
 from src.user import current_user
+
+TEMPLATES_DIR = Path()
 
 View = Response | str
 

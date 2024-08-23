@@ -2,18 +2,13 @@ import logging
 from json import load
 
 from dotenv import dotenv_values
-from flask import Flask, Response, redirect, url_for
+from flask import Flask
 
-from .login import login
+from .blueprints import root
 from .data import Data
+from .login import login
 from .settings import DATA_DIR, OPTIONS_DIR, STATIC_DIR
 from .user import users
-from .views import View
-from .views.admin import admin
-from .views.auth import auth
-from .views.data import data
-from .views.home import home
-from .views.user import user
 
 
 class App(Flask):
@@ -34,6 +29,8 @@ class App(Flask):
         login.init(self)
         users.init(self)
 
+        self.register_blueprint(root)
+
         # -------------------------------- Environment ------------------------------- #
 
         @self.context_processor
@@ -52,22 +49,3 @@ class App(Flask):
                     "locations": load(locations),
                     "topics": load(topics_file),
                 }
-
-        # -------------------------------- Blueprints -------------------------------- #
-
-        self.register_blueprint(admin)
-        self.register_blueprint(auth)
-        self.register_blueprint(data)
-        self.register_blueprint(home)
-        self.register_blueprint(user)
-
-        # ---------------------------------- Routes ---------------------------------- #
-
-        @self.route("/")
-        @self.route("/index")
-        def index() -> View:
-            return redirect(url_for("home.index"))
-
-        @self.route("/sw.js")
-        def service_worker() -> View:
-            return Response(status=204)

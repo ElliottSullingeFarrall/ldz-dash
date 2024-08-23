@@ -1,6 +1,6 @@
 {% extends "_layout.html" %} {% block main %}
 <h1>Change Password</h1>
-<form method="POST" action="{{ url_for('user.settings') }}">
+<form method="POST" action="{{ url_for('.settings') }}">
   <label>Old Password:</label>
   <input name="password_old" type="password" required />
 

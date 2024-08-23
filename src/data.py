@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from flask_login import current_user # type: ignore
+
 from calendar import month_abbr
 from datetime import datetime
 from html import unescape
@@ -10,7 +12,6 @@ from pandas import DataFrame, concat, read_csv, to_datetime
 from pandas.errors import EmptyDataError
 
 from .settings import DATA_DIR, TEMPLATES_DIR
-from .user import current_user
 
 
 class Data:

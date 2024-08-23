@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from pathlib import Path
 from shutil import rmtree
 from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
@@ -16,7 +15,7 @@ from .settings import DATA_DIR
 
 
 class Users(SQLAlchemy):
-    __file__ = Path(__file__).parent.parent / "data" / "users.sqlite"
+    __file__ = DATA_DIR / "users.sqlite"
 
     def init(self, app) -> None:
         self.init_app(app)

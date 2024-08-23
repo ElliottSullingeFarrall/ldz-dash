@@ -25,7 +25,7 @@
   {% for type in categories[category] %}
   {% set j = loop.index %}
   function chart_{{ i }}_{{ j }}() {
-    let url = "{{ url_for('home.charts', category=category, type=type, year=0) | safe }}";
+    let url = "{{ url_for('.charts', category=category, type=type, year=0) | safe }}";
     url = url.replace("0", year_select.value);
 
     const chart = document.getElementById("{{ category }}:{{ type|safe }}");

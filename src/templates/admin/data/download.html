@@ -1,6 +1,6 @@
 {% extends "_layout.html" %} {% block main %}
 <h1>Download Data</h1>
-<form method="POST" action="{{ url_for('admin.data.download') }}" onsubmit="redirect()">
+<form method="POST" action="{{ url_for('.download') }}" onsubmit="redirect()">
   <div class="row">
     <div>
       <label>Month:</label>
@@ -24,7 +24,9 @@
       <label>Users:</label>
       <select name="users" id="users" multiple required>
         {% for username in users %}
-        <option value="{{ username }}">{{ username }} ({{ users[username] }})</option>
+        <option value="{{ username }}">
+          {{ username }} ({{ users[username] }})
+        </option>
         {% endfor %}
       </select>
     </div>
@@ -38,11 +40,11 @@
   const date = new Date();
   const year = date.getFullYear();
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  month_select.value = `${year}-${month}`;;
+  month_select.value = `${year}-${month}`;
 
   function redirect() {
     setTimeout(() => {
-      window.location.href = "{{ url_for('home.index') }}";
+      window.location.href = "{{ url_for('root.home.index') }}";
     }, 50); // delay (ms) | Local: > 25 | Production: > 50
   }
 
