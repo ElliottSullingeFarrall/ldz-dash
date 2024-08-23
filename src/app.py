@@ -1,19 +1,19 @@
 import logging
 from json import load
-from pathlib import Path
 
-from dotenv import dotenv_values  # type: ignore
+from dotenv import dotenv_values
 from flask import Flask, Response, redirect, url_for
 
-from .auth import auth
+from .login import login
 from .data import Data
+from .settings import DATA_DIR, OPTIONS_DIR, STATIC_DIR
 from .user import users
 from .views import View
-from .views.admin import admin as admin_blueprint
-from .views.auth import auth as auth_blueprint
-from .views.data import data as data_blueprint
-from .views.home import home as home_blueprint
-from .views.user import user as user_blueprint
+from .views.admin import admin
+from .views.auth import auth
+from .views.data import data
+from .views.home import home
+from .views.user import user
 
 
 class App(Flask):
@@ -25,29 +25,27 @@ class App(Flask):
         self.config.from_mapping(dotenv_values())
         self.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{users.__file__}"
 
-        Data.data_dir.mkdir(exist_ok=True)
+        DATA_DIR.mkdir(exist_ok=True)
 
         logging.basicConfig(level=logging.DEBUG, filename="flask.log")
 
         # -------------------------------- Initialise -------------------------------- #
 
-        auth.init(self)
+        login.init(self)
         users.init(self)
 
         # -------------------------------- Environment ------------------------------- #
 
         @self.context_processor
         def global_vars() -> dict:
-            options_dir = Path(__file__).parent / "options"
-            static_dir = Path(__file__).parent / "static"
             with (
-                open(options_dir / "departments.json", "r") as departments_file,
-                open(options_dir / "levels.json", "r") as levels_file,
-                open(options_dir / "locations.json", "r") as locations,
-                open(options_dir / "topics.json", "r") as topics_file
+                open(OPTIONS_DIR / "departments.json", "r") as departments_file,
+                open(OPTIONS_DIR / "levels.json", "r") as levels_file,
+                open(OPTIONS_DIR / "locations.json", "r") as locations,
+                open(OPTIONS_DIR / "topics.json", "r") as topics_file
             ):
                 return {
-                    "styles": [file.name for file in static_dir.iterdir()],
+                    "styles": [file.name for file in STATIC_DIR.iterdir()],
                     "categories": Data.categories,
                     "departments": load(departments_file),
                     "levels": load(levels_file),
@@ -57,11 +55,11 @@ class App(Flask):
 
         # -------------------------------- Blueprints -------------------------------- #
 
-        self.register_blueprint(admin_blueprint, url_prefix="/admin")
-        self.register_blueprint(auth_blueprint, url_prefix="/auth")
-        self.register_blueprint(data_blueprint, url_prefix="/data")
-        self.register_blueprint(home_blueprint, url_prefix="/home")
-        self.register_blueprint(user_blueprint, url_prefix="/user")
+        self.register_blueprint(admin, url_prefix="/admin")
+        self.register_blueprint(auth, url_prefix="/auth")
+        self.register_blueprint(data, url_prefix="/data")
+        self.register_blueprint(home, url_prefix="/home")
+        self.register_blueprint(user, url_prefix="/user")
 
         # ---------------------------------- Routes ---------------------------------- #
 

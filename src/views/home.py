@@ -1,10 +1,11 @@
 from flask import Blueprint, jsonify, render_template
 
 from src.data import Data
+from src.settings import TEMPLATES_DIR
 
 from . import View, login_required
 
-home = Blueprint("home", __name__, template_folder="../templates/home")
+home = Blueprint("home", __name__, template_folder=TEMPLATES_DIR / "home")
 
 @home.route("/")
 @login_required

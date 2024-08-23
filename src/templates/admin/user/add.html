@@ -1,6 +1,6 @@
 {% extends "_layout.html" %} {% block main %}
 <h1>Add User</h1>
-<form method="POST" action="{{ url_for('admin.user_add') }}">
+<form method="POST" action="{{ url_for('admin.user.add') }}">
   <label>Username:</label>
   <input name="username" type="text" required />
 
@@ -14,7 +14,7 @@
   <input
     value="Import"
     type="button"
-    onclick='window.location="{{ url_for('admin.user_import') }}"'
+    onclick='window.location="{{ url_for('admin.user._import') }}"'
   />
 </form>
 {% with messages = get_flashed_messages() %} {% if messages %}

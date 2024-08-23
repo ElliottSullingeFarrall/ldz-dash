@@ -3,25 +3,22 @@ from __future__ import annotations
 from calendar import month_abbr
 from datetime import datetime
 from html import unescape
-from pathlib import Path
 from types import TracebackType
 from typing import Optional
 
-from flask_login import current_user  # type: ignore
 from pandas import DataFrame, concat, read_csv, to_datetime
 from pandas.errors import EmptyDataError
 
-DATA_TEMPLATES = Path(__file__).parent / "templates" / "data"
+from .settings import DATA_DIR, TEMPLATES_DIR
+from .user import current_user
 
 
 class Data:
     categories = {
         category.name: [path.stem for path in category.iterdir()]
-        for category in DATA_TEMPLATES.iterdir()
+        for category in (TEMPLATES_DIR / "data").iterdir()
         if category.is_dir()
     }
-
-    data_dir = Path(__file__).parent.parent / "data"
 
     def __init__(self, category: str, type: str, username: Optional[str] = None) -> None:
         self.category = category
@@ -33,7 +30,7 @@ class Data:
         else:
             self.username = current_user.username
 
-        self.path = (self.data_dir / self.username / category / unescape(type)).with_suffix(".csv")
+        self.path = (DATA_DIR / self.username / category / unescape(type)).with_suffix(".csv")
 
     def __enter__(self) -> Data:
         if self.path.exists():

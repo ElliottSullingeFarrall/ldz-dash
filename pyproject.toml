@@ -9,13 +9,13 @@ packages = [{ include = "src", to = "ldz" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+python-dotenv = "^1.0.1"
 Flask = "^3.0.1"
 Flask-SQLAlchemy = "^3.1.1"
 Flask-Login = "^0.6.3"
 pandas = "^2.2.0"
 pandas-stubs = "^2.2.2.240807"
 gitpython = "^3.1.41"
-python-dotenv = "^1.0.1"
 
 [build-system]
 requires = ["poetry-core"]

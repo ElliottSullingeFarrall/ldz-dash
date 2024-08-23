@@ -1,3 +1,4 @@
+.env
 .venv
 .direnv
 .pre-commit-config.yaml
@@ -6,6 +7,5 @@ __pycache__
 .mypy_cache
 .ruff_cache
 
-.env
 data/*
 *.log

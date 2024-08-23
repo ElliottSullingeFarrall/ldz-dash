@@ -6,7 +6,7 @@ from flask_login import LoginManager  # type: ignore
 from .user import User
 
 
-class Auth(LoginManager):
+class Login(LoginManager):
     login_view = "auth.login"
 
     def init(self, app: Flask) -> None:
@@ -16,4 +16,4 @@ class Auth(LoginManager):
         def load_user(user_id: str) -> Optional[User]:
             return User.query.get(int(user_id))
 
-auth = Auth()
+login = Login()

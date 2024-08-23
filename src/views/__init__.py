@@ -1,9 +1,11 @@
 from functools import wraps
 
 from flask import redirect, render_template, request, url_for
-from flask_login import current_user  # type: ignore
 from werkzeug import Response
 
+from src.user import current_user
+
+View = Response | str
 
 def login_required(f):
     @wraps(f)
@@ -32,5 +34,3 @@ def confirm_required(f):
             if "confirm" in request.form:
                 return f(*args, **kwargs)
     return decorated_function
-
-View = Response | str

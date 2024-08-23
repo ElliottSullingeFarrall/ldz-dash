@@ -1,10 +1,11 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 
 from src.data import Data
+from src.settings import TEMPLATES_DIR
 
 from . import View, confirm_required, login_required
 
-data = Blueprint("data", __name__, template_folder="../templates/data")
+data = Blueprint("data", __name__, template_folder=TEMPLATES_DIR / "data")
 
 @data.route("/<category>/<type>", methods=["GET", "POST"])
 @login_required

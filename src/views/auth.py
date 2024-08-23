@@ -1,11 +1,11 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import current_user  # type: ignore
 
-from src.user import UserException, users
+from src.settings import TEMPLATES_DIR
+from src.user import UserException, current_user, users
 
 from . import View
 
-auth = Blueprint("auth", __name__, template_folder="../templates/auth")
+auth = Blueprint("auth", __name__, template_folder=TEMPLATES_DIR / "auth")
 
 @auth.route("/login", methods=["GET", "POST"])
 def login() -> View:

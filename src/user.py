@@ -12,6 +12,7 @@ from pandas import DataFrame, read_csv, read_sql
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .data import Data
+from .settings import DATA_DIR
 
 
 class Users(SQLAlchemy):
@@ -52,7 +53,7 @@ class Users(SQLAlchemy):
         self.session.delete(user)
         self.session.commit()
 
-        user_data = Data.data_dir / user.username
+        user_data = DATA_DIR / user.username
         if user_data.exists():
             rmtree(user_data)
 

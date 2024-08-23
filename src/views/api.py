@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from dotenv import dotenv_values  # type: ignore
+from dotenv import dotenv_values
 from flask import Blueprint, Response, abort, request
 from git import Repo
 
