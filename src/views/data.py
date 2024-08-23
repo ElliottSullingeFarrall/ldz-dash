@@ -5,7 +5,7 @@ from src.settings import TEMPLATES_DIR
 
 from . import View, confirm_required, login_required
 
-data = Blueprint("data", __name__, template_folder=TEMPLATES_DIR / "data")
+data = Blueprint("data", __name__, url_prefix="/data", template_folder=TEMPLATES_DIR / "data")
 
 @data.route("/<category>/<type>", methods=["GET", "POST"])
 @login_required

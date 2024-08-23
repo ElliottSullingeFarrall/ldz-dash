@@ -55,11 +55,11 @@ class App(Flask):
 
         # -------------------------------- Blueprints -------------------------------- #
 
-        self.register_blueprint(admin, url_prefix="/admin")
-        self.register_blueprint(auth, url_prefix="/auth")
-        self.register_blueprint(data, url_prefix="/data")
-        self.register_blueprint(home, url_prefix="/home")
-        self.register_blueprint(user, url_prefix="/user")
+        self.register_blueprint(admin)
+        self.register_blueprint(auth)
+        self.register_blueprint(data)
+        self.register_blueprint(home)
+        self.register_blueprint(user)
 
         # ---------------------------------- Routes ---------------------------------- #
 

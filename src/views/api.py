@@ -6,7 +6,7 @@ from git import Repo
 
 from . import View
 
-api = Blueprint("api", __name__)
+api = Blueprint("api", __name__, url_prefix="/api")
 
 @api.route("/update", methods=["POST"])
 def update() -> View:

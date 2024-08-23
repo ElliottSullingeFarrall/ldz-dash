@@ -8,7 +8,7 @@ from src.user import users
 
 from .. import View, admin_required
 
-data = Blueprint("data", __name__, template_folder=TEMPLATES_DIR / "admin" / "data")
+data = Blueprint("data", __name__, url_prefix="/data", template_folder=TEMPLATES_DIR / "admin" / "data")
 
 @data.route("/", methods=["GET", "POST"])
 @admin_required

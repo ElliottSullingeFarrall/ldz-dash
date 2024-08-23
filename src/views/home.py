@@ -5,7 +5,7 @@ from src.settings import TEMPLATES_DIR
 
 from . import View, login_required
 
-home = Blueprint("home", __name__, template_folder=TEMPLATES_DIR / "home")
+home = Blueprint("home", __name__, url_prefix="/home", template_folder=TEMPLATES_DIR / "home")
 
 @home.route("/")
 @login_required

@@ -6,7 +6,7 @@ from .. import View, admin_required, confirm_required
 from src.settings import TEMPLATES_DIR
 from src.user import UserException, current_user, users
 
-user = Blueprint("user", __name__, template_folder=TEMPLATES_DIR / "admin"/ "user")
+user = Blueprint("user", __name__, url_prefix="/user", template_folder=TEMPLATES_DIR / "admin"/ "user")
 
 @user.route("/")
 @admin_required

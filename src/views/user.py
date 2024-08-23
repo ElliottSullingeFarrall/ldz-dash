@@ -5,7 +5,7 @@ from src.user import UserException, users
 
 from . import View, login_required
 
-user = Blueprint("user", __name__, template_folder=TEMPLATES_DIR / "user")
+user = Blueprint("user", __name__, url_prefix="/user", template_folder=TEMPLATES_DIR / "user")
 
 @user.route("/settings", methods=["GET", "POST"])
 @login_required
