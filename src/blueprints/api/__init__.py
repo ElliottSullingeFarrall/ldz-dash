@@ -4,7 +4,7 @@ from dotenv import dotenv_values
 from flask import Blueprint, Response, abort, request
 from git import Repo
 
-from ..utils import View
+from src.view import View
 
 api = Blueprint("api", __name__, url_prefix="/api")
 

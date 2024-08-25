@@ -1,10 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+from os.path import join
 
 from src.user import UserException, current_user, users
+from src.view import View, admin_required, confirm_required
 
-from ...utils import TEMPLATES_DIR, View, admin_required, confirm_required
-
-TEMPLATES_DIR = TEMPLATES_DIR / "admin" / "user"
+TEMPLATES_DIR = join("admin", "user")
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -12,7 +12,7 @@ user = Blueprint("user", __name__, url_prefix="/user")
 @admin_required
 def view() -> View:
     table = users.table_view
-    return render_template(str(TEMPLATES_DIR / "view.html"), headers=table.columns, table=table.values)
+    return render_template(join(TEMPLATES_DIR, "view.html"), headers=table.columns, table=table.values)
 
 @user.route("/add", methods=["GET", "POST"])
 @admin_required
@@ -25,7 +25,7 @@ def add() -> View:
         else:
             return redirect(url_for(".view"))
 
-    return render_template(str(TEMPLATES_DIR / "add.html"))
+    return render_template(join(TEMPLATES_DIR, "add.html"))
 
 @user.route("/import", methods=["GET", "POST"])
 @admin_required
@@ -38,7 +38,7 @@ def _import() -> View:
         else:
             return redirect(url_for(".view"))
 
-    return render_template(str(TEMPLATES_DIR / "import.html"))
+    return render_template(join(TEMPLATES_DIR, "import.html"))
 
 @user.route("/edit/<int:idx>", methods=["GET", "POST"])
 @admin_required
@@ -55,7 +55,7 @@ def edit(idx: int) -> View:
     if user == current_user:
         return redirect(url_for(".view"))
 
-    return render_template(str(TEMPLATES_DIR / "edit.html"), idx=idx)
+    return render_template(join(TEMPLATES_DIR, "edit.html"), idx=idx)
 
 @user.route("/remove/<int:idx>", methods=["GET", "POST"])
 @admin_required

@@ -1,8 +1,10 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
+from os.path import join
 
 from src.user import UserException, current_user, users
+from src.view import View
 
-from ..utils import View, TEMPLATES_DIR
+TEMPLATES_DIR = "auth"
 
 auth = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -19,4 +21,4 @@ def login() -> View:
         else:
             return redirect(url_for("root.home.index"))
 
-    return render_template(str(TEMPLATES_DIR / "login.html"))
+    return render_template(join(TEMPLATES_DIR, "login.html"))

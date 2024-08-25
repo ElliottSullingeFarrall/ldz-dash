@@ -1,12 +1,13 @@
 from flask import Blueprint, Response, redirect, url_for
 
+from src.view import View
+
 from .admin import admin
 from .api import api
 from .auth import auth
 from .data import data
 from .home import home
 from .user import user
-from .utils import View
 
 root = Blueprint("root", __name__)
 

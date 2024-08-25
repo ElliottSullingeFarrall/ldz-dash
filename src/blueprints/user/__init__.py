@@ -1,10 +1,11 @@
+from os.path import join
+
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from src.user import UserException, users
+from src.view import View, login_required
 
-from ..utils import View, login_required, TEMPLATES_DIR
-
-TEMPLATES_DIR = TEMPLATES_DIR / "user"
+TEMPLATES_DIR = "user"
 
 user = Blueprint("user", __name__, url_prefix="/user")
 
@@ -19,4 +20,4 @@ def settings() -> View:
         else:
             return redirect(url_for("root.home.index"))
 
-    return render_template(str(TEMPLATES_DIR / "settings.html"))
+    return render_template(join(TEMPLATES_DIR, "settings.html"))

@@ -11,13 +11,15 @@ from typing import Optional
 from pandas import DataFrame, concat, read_csv, to_datetime
 from pandas.errors import EmptyDataError
 
-from .settings import DATA_DIR, TEMPLATES_DIR
+from .settings import BLUEPRINTS_DIR, DATA_DIR
+
+DATA_TEMPLATES = BLUEPRINTS_DIR / "data" / "templates"
 
 
 class Data:
     categories = {
         category.name: [path.stem for path in category.iterdir()]
-        for category in (TEMPLATES_DIR / "data").iterdir()
+        for category in (DATA_TEMPLATES).iterdir()
         if category.is_dir()
     }
 

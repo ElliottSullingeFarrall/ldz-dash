@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from pathlib import Path
 from shutil import rmtree
 from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
