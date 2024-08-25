@@ -1,5 +1,6 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
 from os.path import join
+
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from src.user import UserException, current_user, users
 from src.view import View, admin_required, confirm_required
@@ -11,8 +12,7 @@ user = Blueprint("user", __name__, url_prefix="/user")
 @user.route("/")
 @admin_required
 def view() -> View:
-    table = users.table_view
-    return render_template(join(TEMPLATES_DIR, "view.html"), headers=table.columns, table=table.values)
+    return render_template(join(TEMPLATES_DIR, "view.html"), headers=users.columns, table=users.values)
 
 @user.route("/add", methods=["GET", "POST"])
 @admin_required
@@ -26,19 +26,6 @@ def add() -> View:
             return redirect(url_for(".view"))
 
     return render_template(join(TEMPLATES_DIR, "add.html"))
-
-@user.route("/import", methods=["GET", "POST"])
-@admin_required
-def _import() -> View:
-    if request.method == "POST":
-        try:
-            users.from_csv(request.files)
-        except UserException as error:
-            flash(error.message)
-        else:
-            return redirect(url_for(".view"))
-
-    return render_template(join(TEMPLATES_DIR, "import.html"))
 
 @user.route("/edit/<int:idx>", methods=["GET", "POST"])
 @admin_required

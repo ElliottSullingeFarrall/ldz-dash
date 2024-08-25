@@ -1,5 +1,6 @@
-from flask import Blueprint, Response, render_template, request
 from os.path import join
+
+from flask import Blueprint, Response, render_template, request
 
 from src.data import Data
 from src.user import users

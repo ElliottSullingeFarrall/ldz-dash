@@ -9,3 +9,5 @@ TEMPLATES_DIR = SRC / "templates"
 OPTIONS_DIR = SRC / "options"
 
 DATA_DIR = SRC.parent / "data"
+
+USERS_FILE = SRC.parent / "USERS"

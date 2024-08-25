@@ -1,19 +1,18 @@
 from __future__ import annotations
 
-from flask_login import current_user # type: ignore
-
 from calendar import month_abbr
 from datetime import datetime
 from html import unescape
 from types import TracebackType
 from typing import Optional
 
+from flask_login import current_user  # type: ignore
 from pandas import DataFrame, concat, read_csv, to_datetime
 from pandas.errors import EmptyDataError
 
-from .settings import BLUEPRINTS_DIR, DATA_DIR
+from .settings import DATA_DIR, TEMPLATES_DIR
 
-DATA_TEMPLATES = BLUEPRINTS_DIR / "data" / "templates"
+DATA_TEMPLATES = TEMPLATES_DIR / "data"
 
 
 class Data:

@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, render_template
 from os.path import join
+
+from flask import Blueprint, jsonify, render_template
 
 from src.data import Data
 from src.view import View, login_required

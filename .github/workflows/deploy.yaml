@@ -12,14 +12,7 @@ jobs:
     steps:
       - name: Trigger Update
         run: >
-          curl
-          -X POST
-          -H "Content-Type: application/json"
-          -H "X-Secret-Key: ${{ secrets.SECRET_KEY }}"
-          -H "X-WSGI-File: ${{ vars.WSGI_FILE }}"
-          -d "{'ref': '${{ github.ref }}', 'after': '${{ github.sha }}'}"
-          "${{ vars.URL }}/api/update"
-
+          curl -X POST -H "Content-Type: application/json" -H "X-Secret-Key: ${{ secrets.SECRET_KEY }}" -H "X-WSGI-File: ${{ vars.WSGI_FILE }}" -d "{'ref': '${{ github.ref }}', 'after': '${{ github.sha }}'}" "${{ vars.URL }}/api/update" #magic___^_^___line
       - name: Wait
         run: sleep 10
 

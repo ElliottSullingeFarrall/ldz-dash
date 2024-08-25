@@ -1,5 +1,6 @@
-from flask import Blueprint, flash, redirect, render_template, request, url_for
 from os.path import join
+
+from flask import Blueprint, flash, redirect, render_template, request, url_for
 
 from src.user import UserException, current_user, users
 from src.view import View

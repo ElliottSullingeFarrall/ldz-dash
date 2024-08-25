@@ -18,6 +18,10 @@ to clone the repository. If you don't have enough space to clone the repository,
 
 From the root of the repository, run the `install.sh` script to generate a `.env` file. This file will contain the `SECREY_KEY` variable. Take note of this key as it will be needed throughout the installation process.
 
+#### Optional: Create Users
+
+To have some users be created by default, add a file `USERS` in the root of `<repo>` and populate each line with a username.
+
 #### Initialise the Wep App
 
 Next create a web app but don't auto-configure for any frameworks as we will be making use of virtual environments. Make sure the Python version is set to **3.10**.
@@ -53,7 +57,7 @@ The app is configured to automatically pull any changes that are made via a pull
 
 #### First Login
 
-The application should now be operational. For the first login use username and password **default**. It is recommended to create a new admin user as soon as possible and then delete the default user.
+The application should now be operational. For the first login use username and password **default**. It is recommended to create a new admin user as soon as possible and then delete the default user. If you added a `USERS` file these user will also be created with password **default**.
 
 ## Development
 

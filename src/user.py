@@ -13,7 +13,7 @@ from pandas import DataFrame, read_csv, read_sql
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .data import Data
-from .settings import DATA_DIR
+from .settings import DATA_DIR, USERS_FILE
 
 
 class Users(SQLAlchemy):
@@ -25,6 +25,10 @@ class Users(SQLAlchemy):
             self.create_all()
             if self.empty:
                 self.append({"username": "default", "password": "default", "admin": True})
+                if USERS_FILE.exists():
+                    with open(USERS_FILE) as users:
+                        for user in users:
+                            self.append({"username": user.strip(), "password": "default", "admin": False})
 
     def append(self, form: dict) -> None:
         user = User.query.filter_by(username=form["username"]).first()
@@ -37,16 +41,14 @@ class Users(SQLAlchemy):
             raise UserException("User already exists!")
 
     def __getitem__(self, idx: int) -> User:
-        table = read_sql(User.query.statement, self.engine)
-        user = User.query.filter_by(username=table.at[idx, "username"]).first()
+        user = User.query.filter_by(username=self._table.at[idx, "username"]).first()
 
         if not user:
             raise UserException("Invalid user!")
         return user
 
     def __delitem__(self, idx: int) -> None:
-        table = read_sql(User.query.statement, self.engine)
-        user = User.query.filter_by(username=table.at[idx, "username"]).first()
+        user = User.query.filter_by(username=self._table.at[idx, "username"]).first()
 
         if not user:
             raise UserException("Invalid user!")
@@ -64,6 +66,35 @@ class Users(SQLAlchemy):
     @property
     def empty(self) -> bool:
         return not len(self)
+
+    @property
+    def _table(self) -> DataFrame:
+        return read_sql(User.query.statement, self.engine)
+
+    @property
+    def _columns(self) -> list:
+        return self._table.columns.tolist()
+
+    @property
+    def _values(self) -> list:
+        return self._table.values.tolist()
+
+    @property
+    def table(self) -> DataFrame:
+        table = self._table
+
+        table.pop("id")
+        table.pop("password")
+
+        return table
+
+    @property
+    def columns(self) -> list:
+        return self.table.columns.tolist()
+
+    @property
+    def values(self) -> list:
+        return self.table.values.tolist()
 
     # ------------------------------ User Management ----------------------------- #
 
@@ -94,8 +125,7 @@ class Users(SQLAlchemy):
         self.session.commit()
 
     def reset_password(self, idx: int, form: dict) -> None:
-        table = read_sql(User.query.statement, users.engine)
-        user = User.query.filter_by(username=table.at[idx, "username"]).first()
+        user = User.query.filter_by(username=self._table.at[idx, "username"]).first()
         if not user:
             raise UserException("Invalid user!")
 
@@ -126,15 +156,6 @@ class Users(SQLAlchemy):
             users[username] = last_submission
 
         return users
-
-    @property
-    def table_view(self) -> DataFrame:
-        table = read_sql(User.query.statement, users.engine)
-
-        table.pop("id")
-        table.pop("password")
-
-        return table
 
     def from_csv(self, files: dict) -> None:
         file = files["users"]
