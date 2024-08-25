@@ -17,7 +17,7 @@ jobs:
           -H "Content-Type: application/json"
           -H "X-Secret-Key: ${{ secrets.SECRET_KEY }}"
           -H "X-WSGI-File: ${{ vars.WSGI_FILE }}"
-          -d '{"ref": "${{ github.ref }}", "after": "${{ github.sha }}"}'
+          -d "{'ref': '${{ github.ref }}', 'after': '${{ github.sha }}'}"
           "${{ vars.URL }}/api/update"
 
       - name: Wait

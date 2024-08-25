@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
-from pathlib import Path
 from shutil import rmtree
 from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
@@ -35,7 +36,7 @@ class Users(SQLAlchemy):
         else:
             raise UserException("User already exists!")
 
-    def __getitem__(self, idx: int) -> "User":
+    def __getitem__(self, idx: int) -> User:
         table = read_sql(User.query.statement, self.engine)
         user = User.query.filter_by(username=table.at[idx, "username"]).first()
 
@@ -115,13 +116,13 @@ class Users(SQLAlchemy):
             for category in Data.categories:
                 for type in Data.categories[category]:
                     with Data(category, type, username) as data:
-                        if "Date" not in data.df:
+                        if "Date" not in data._table:
                             continue
 
                         if not last_submission:
-                            last_submission = data.df["Date"].max()
+                            last_submission = data._table["Date"].max()
                         else:
-                            last_submission = max(last_submission, data.df["Date"].max())
+                            last_submission = max(last_submission, data._table["Date"].max())
             users[username] = last_submission
 
         return users

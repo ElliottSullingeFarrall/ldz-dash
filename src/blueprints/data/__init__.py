@@ -1,5 +1,6 @@
-from flask import Blueprint, redirect, render_template, request, url_for
 from os.path import join
+
+from flask import Blueprint, redirect, render_template, request, url_for
 
 from src.data import Data
 from src.view import View, confirm_required, login_required
@@ -22,7 +23,7 @@ def add(category: str, type: str) -> View:
 @login_required
 def edit(category: str, type: str) -> View:
     with Data(category, type) as data:
-        return render_template(join(TEMPLATES_DIR, "edit.html"), category=category, type=type, headers=data.df.columns, table=data.df.values)
+        return render_template(join(TEMPLATES_DIR, "edit.html"), category=category, type=type, headers=data.columns, table=data.values)
 
 @data.route("/<category>/<type>/remove/<int:idx>", methods=["GET", "POST"])
 @login_required

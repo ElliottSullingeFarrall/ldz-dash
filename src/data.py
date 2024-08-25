@@ -29,34 +29,40 @@ class Data:
 
         if username:
             self.username = username
-
         else:
             self.username = current_user.username
 
         self.path = (DATA_DIR / self.username / category / unescape(type)).with_suffix(".csv")
-
-    def __enter__(self) -> Data:
         if self.path.exists():
             try:
-                self.df = read_csv(self.path, index_col=False)
+                self._table = read_csv(self.path, index_col=False)
             except EmptyDataError:
-                self.df = DataFrame()
+                self._table = DataFrame()
         else:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.df = DataFrame()
+            self._table = DataFrame()
+
+    def __enter__(self) -> Data:
         return self
 
     def __exit__(self, exception_type: Optional[type[BaseException]], exception_value: Optional[BaseException], exception_traceback: Optional[TracebackType]) -> None:
-        self.df.to_csv(self.path, index=False)
-        del self
+        self._table.to_csv(self.path, index=False)
 
     def append(self, row: dict) -> None:
-        self.df = concat([DataFrame(row, index=[0]), self.df], ignore_index=True)
-        self.df.sort_values("Date", ascending=False, inplace=True)
+        self._table = concat([DataFrame(row, index=[0]), self._table], ignore_index=True)
+        self._table.sort_values("Date", ascending=False, inplace=True)
 
     def __delitem__(self, idx: int) -> None:
-        self.df = self.df.drop(idx)
-        self.df.sort_values("Date", ascending=False, inplace=True)
+        self._table = self._table.drop(idx)
+        self._table.sort_values("Date", ascending=False, inplace=True)
+
+    @property
+    def columns(self) -> list:
+        return self._table.columns.tolist()
+
+    @property
+    def values(self) -> list:
+        return self._table.values.tolist()
 
     @classmethod
     def pull(cls, form: dict) -> DataFrame:
@@ -65,29 +71,29 @@ class Data:
         category, type = form["category:type"].split(":")
         users = form.getlist("users") # type: ignore
 
-        df = DataFrame()
+        table = DataFrame()
         for user in users:
             with cls(category, type, user) as data:
-                df = concat([df, data.df])
+                table = concat([table, data._table])
 
-        if "Date" in df:
-            df["Date"] = to_datetime(df["Date"])
-            df = df.loc[(df["Date"].dt.month == dt.month) & (df["Date"].dt.year == dt.year)]
-            df.sort_values("Date", ascending=False, inplace=True)
+        if "Date" in table:
+            table["Date"] = to_datetime(table["Date"])
+            table = table.loc[(table["Date"].dt.month == dt.month) & (table["Date"].dt.year == dt.year)]
+            table.sort_values("Date", ascending=False, inplace=True)
 
-        return df
+        return table
 
     def summarise(self, year: int) -> dict:
         # For using data in charts
         data = dict.fromkeys(month_abbr[1:], 0)
 
-        if not self.df.empty:
-            df = self.df.copy()
+        if not self._table.empty:
+            table = self._table.copy()
 
-            df["Date"] = to_datetime(df["Date"])
-            df = df[df["Date"].dt.year == year]
+            table["Date"] = to_datetime(table["Date"])
+            table = table[table["Date"].dt.year == year]
 
             for month in data:
-                data[month] = df.loc[df["Date"].dt.strftime("%b") == month].shape[0]
+                data[month] = table.loc[table["Date"].dt.strftime("%b") == month].shape[0]
 
         return data
