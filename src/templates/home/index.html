@@ -4,8 +4,9 @@
     <input name="year" type="number" min="1970" step="1" />
   </div>
   <div class="charts">
-    {% for category in categories %} {% for type in categories[category] %}
-    <div id="{{ category }}:{{ type|safe }}" class="chart"></div>
+    {% for category in categories %} {% for subcategory in categories[category]
+    %}
+    <div id="{{ category }}:{{ subcategory|safe }}" class="chart"></div>
     {% endfor %} {% endfor %}
   </div>
 </div>
@@ -22,13 +23,13 @@
 
   {% for category in categories %}
   {% set i = loop.index %}
-  {% for type in categories[category] %}
+  {% for subcategory in categories[category] %}
   {% set j = loop.index %}
   function chart_{{ i }}_{{ j }}() {
-    let url = "{{ url_for('.charts', category=category, type=type, year=0) | safe }}";
+    let url = "{{ url_for('.charts', category=category, subcategory=subcategory, year=0)|safe }}";
     url = url.replace("0", year_select.value);
 
-    const chart = document.getElementById("{{ category }}:{{ type|safe }}");
+    const chart = document.getElementById("{{ category }}:{{ subcategory|safe }}");
     chart.style.opacity = 0;
 
     delayed_exec(() => {

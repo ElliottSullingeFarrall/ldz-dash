@@ -17,21 +17,21 @@ DATA_TEMPLATES = TEMPLATES_DIR / "data"
 
 class Data:
     categories = {
-        category.name: [path.stem for path in category.iterdir()]
-        for category in (DATA_TEMPLATES).iterdir()
-        if category.is_dir()
+        dir.name: [path.stem for path in dir.iterdir()]
+        for dir in (DATA_TEMPLATES).iterdir()
+        if dir.is_dir()
     }
 
-    def __init__(self, category: str, type: str, username: Optional[str] = None) -> None:
+    def __init__(self, category: str, subcategory: str, username: Optional[str] = None) -> None:
         self.category = category
-        self.type = type
+        self.subcategory = subcategory
 
         if username:
             self.username = username
         else:
             self.username = current_user.username
 
-        self.path = (DATA_DIR / self.username / category / unescape(type)).with_suffix(".csv")
+        self.path = (DATA_DIR / self.username / category / unescape(subcategory)).with_suffix(".csv")
         if self.path.exists():
             try:
                 self._table = read_csv(self.path, index_col=False)

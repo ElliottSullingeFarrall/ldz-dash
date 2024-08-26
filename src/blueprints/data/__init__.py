@@ -9,26 +9,26 @@ TEMPLATES_DIR = "data"
 
 data = Blueprint("data", __name__, url_prefix="/data")
 
-@data.route("/<category>/<type>", methods=["GET", "POST"])
+@data.route("/<category>/<subcategory>", methods=["GET", "POST"])
 @login_required
-def add(category: str, type: str) -> View:
+def add(category: str, subcategory: str) -> View:
     if request.method == "POST":
-        with Data(category, type) as data:
+        with Data(category, subcategory) as data:
             data.append(request.form)
-        return redirect(url_for(".add", category=category, type=type))
+        return redirect(url_for(".add", category=category, subcategory=subcategory))
 
-    return render_template(join(TEMPLATES_DIR, category, type + ".html"), category=category, type=type)
+    return render_template(join(TEMPLATES_DIR, category, subcategory + ".html"), category=category, subcategory=subcategory)
 
-@data.route("/<category>/<type>/view")
+@data.route("/<category>/<subcategory>/edit")
 @login_required
-def edit(category: str, type: str) -> View:
-    with Data(category, type) as data:
-        return render_template(join(TEMPLATES_DIR, "edit.html"), category=category, type=type, headers=data.columns, table=data.values)
+def edit(category: str, subcategory: str) -> View:
+    with Data(category, subcategory) as data:
+        return render_template(join(TEMPLATES_DIR, "edit.html"), category=category, subcategory=subcategory, headers=data.columns, table=data.values)
 
-@data.route("/<category>/<type>/remove/<int:idx>", methods=["GET", "POST"])
+@data.route("/<category>/<subcategory>/remove/<int:idx>", methods=["GET", "POST"])
 @login_required
 @confirm_required
-def remove(category: str, type: str, idx: int) -> View:
-    with Data(category, type) as data:
+def remove(category: str, subcategory: str, idx: int) -> View:
+    with Data(category, subcategory) as data:
         del data[idx]
-    return redirect(url_for(".edit", category=category, type=type))
+    return redirect(url_for(".edit", category=category, subcategory=subcategory))

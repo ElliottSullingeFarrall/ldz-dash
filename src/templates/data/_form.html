@@ -1,17 +1,15 @@
 {% extends "_layout.html" %} {% block main %}
-<h1>{{ type|upper }} ({{ category|capitalize }})</h1>
+<h1>{{ subcategory|upper }} ({{ category|capitalize }})</h1>
 <form
   method="POST"
-  action="{{ url_for('.add', category=category, type=type) }}"
+  action="{{ url_for('.add', category=category, subcategory=subcategory) }}"
 >
   {% block form %}{% endblock %}
   <input value="Submit" type="submit" />
   <input
     value="Edit"
     type="button"
-    onclick="`window.location"
-    ="{{ url_for('.edit', category=category, type=type) }}"
-    `
+    onclick='window.location="{{ url_for('.edit', category=category, subcategory=subcategory) }}"'
   />
 </form>
 

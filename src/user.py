@@ -2,14 +2,13 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from shutil import rmtree
-from tempfile import NamedTemporaryFile
 from typing import TYPE_CHECKING
 
 from flask_login import (  # type: ignore
     UserMixin, current_user, login_user, logout_user,
 )
 from flask_sqlalchemy import SQLAlchemy
-from pandas import DataFrame, read_csv, read_sql
+from pandas import DataFrame, read_sql
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .data import Data
@@ -156,25 +155,6 @@ class Users(SQLAlchemy):
             users[username] = last_submission
 
         return users
-
-    def from_csv(self, files: dict) -> None:
-        file = files["users"]
-
-        if file.filename == "":
-            raise UserException("No selected file!")
-        if not file.filename.endswith(".csv"):
-            raise UserException("Invalid file type!")
-
-        with NamedTemporaryFile(suffix=".csv") as temp:
-            file.save(temp.name)
-            df = read_csv(temp.name)
-
-        for _, row in df.iterrows():
-            user = User.query.filter_by(username=row["username"]).first()
-            if not user:
-                self.append(row.to_dict())
-            else:
-                raise UserException("User already exists!")
 
 users = Users()
 

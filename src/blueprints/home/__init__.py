@@ -14,10 +14,10 @@ home = Blueprint("home", __name__, url_prefix="/home")
 def index() -> View:
     return render_template(join(TEMPLATES_DIR, "index.html"))
 
-@home.route("/charts/<category>/<type>/<int:year>", methods=["GET"])
+@home.route("/charts/<category>/<subcategory>/<int:year>", methods=["GET"])
 @login_required
-def charts(category: str, type: str, year: int) -> View:
-    with Data(category, type) as data:
+def charts(category: str, subcategory: str, year: int) -> View:
+    with Data(category, subcategory) as data:
         chart_data = data.summarise(year)
 
     trace = {
@@ -32,7 +32,7 @@ def charts(category: str, type: str, year: int) -> View:
         "showlegend": False,
         "autosize": True,
         "margin": {"l": 10, "r": 10, "t": 40, "b": 40},
-        "title": f"{category.capitalize()} - {type.upper()}",
+        "title": f"{category.capitalize()} - {subcategory.upper()}",
         "xaxis": {
             "tickmode": "linear",
             "tick0": 0,

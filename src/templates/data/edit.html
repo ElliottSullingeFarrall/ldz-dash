@@ -21,7 +21,8 @@
 <script>
   function remove(row) {
     const idx = row.rowIndex - 1;
-    let url = "{{ url_for('.remove', category=category, type=type, idx=0) }}";
+    let url =
+      "{{ url_for('.remove', category=category, subcategory=subcategory, idx=0) }}";
     url = url.replace("0", idx);
     window.location.replace(url);
   }

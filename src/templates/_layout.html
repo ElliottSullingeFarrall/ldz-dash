@@ -30,11 +30,11 @@
   <a class="item" href="{{ url_for('root.home.index') }}">Home</a>
   {% for category in categories %}
   <div class="sep">{{ category|capitalize }}</div>
-  {% for type in categories[category] %}
+  {% for subcategory in categories[category] %}
   <a
     class="item"
-    href="{{ url_for('root.data.add', category=category, type=type) }}"
-    >{{ type|upper }}</a
+    href="{{ url_for('root.data.add', category=category, subcategory=subcategory) }}"
+    >{{ subcategory|upper }}</a
   >
   {% endfor %} {% endfor %}
 </div>

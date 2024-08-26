@@ -8,11 +8,11 @@
     </div>
     <div>
       <label>Type:</label>
-      <select name="category:type" required>
+      <select name="category:subcategory" required>
         {% for category in categories %}
         <optgroup label="{{ category|capitalize }}">
-          {% for type in categories[category] %}
-          <option value="{{ category }}:{{ type }}">{{ type|upper }}</option>
+          {% for subcategory in categories[category] %}
+          <option value="{{ category }}:{{ subcategory }}">{{ subcategory|upper }}</option>
           {% endfor %}
         </optgroup>
         {% endfor %}

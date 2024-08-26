@@ -22,8 +22,6 @@ class App(Flask):
 
         DATA_DIR.mkdir(exist_ok=True)
 
-        logging.basicConfig(level=logging.DEBUG, filename="flask.log")
-
         # -------------------------------- Initialise -------------------------------- #
 
         login.init(self)
@@ -36,10 +34,10 @@ class App(Flask):
         @self.context_processor
         def global_vars() -> dict:
             with (
-                open(OPTIONS_DIR / "departments.json", "r") as departments_file,
-                open(OPTIONS_DIR / "levels.json", "r") as levels_file,
-                open(OPTIONS_DIR / "locations.json", "r") as locations,
-                open(OPTIONS_DIR / "topics.json", "r") as topics_file
+                open(OPTIONS_DIR / "departments.json") as departments_file,
+                open(OPTIONS_DIR / "levels.json") as levels_file,
+                open(OPTIONS_DIR / "locations.json") as locations,
+                open(OPTIONS_DIR / "topics.json") as topics_file
             ):
                 return {
                     "styles": [file.name for file in STATIC_DIR.iterdir()],
@@ -51,5 +49,7 @@ class App(Flask):
                 }
 
 app = App()
+
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG, filename="flask.log")
     app.run()
