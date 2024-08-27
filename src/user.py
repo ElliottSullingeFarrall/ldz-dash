@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from shutil import rmtree
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Union
 
 from flask_login import (  # type: ignore
     UserMixin, current_user, login_user, logout_user,
@@ -11,7 +11,6 @@ from flask_sqlalchemy import SQLAlchemy
 from pandas import DataFrame, read_sql
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from .data import Data
 from .settings import DATA_DIR, USERS_FILE
 
 
@@ -30,7 +29,7 @@ class Users(SQLAlchemy):
                             self.append({"username": user.strip(), "password": "default", "admin": False})
 
     def append(self, form: dict) -> None:
-        user = User.query.filter_by(username=form["username"]).first()
+        user = self[form["username"]]
 
         if not user:
             user = User(username=form["username"], password=generate_password_hash(form["password"]), admin=bool(form.get("admin")))
@@ -39,19 +38,19 @@ class Users(SQLAlchemy):
         else:
             raise UserException("User already exists!")
 
-    def __getitem__(self, idx: int) -> User:
-        user = User.query.filter_by(username=self._table.at[idx, "username"]).first()
+    def __getitem__(self, idx: Union[int, str]) -> User:
+        if isinstance(idx, int):
+            username = self._table.at[idx, "username"]
+        elif isinstance(idx, str):
+            username = idx
+        user = User.query.filter_by(username=username).first()
 
         if not user:
             raise UserException("Invalid user!")
         return user
 
     def __delitem__(self, idx: int) -> None:
-        user = User.query.filter_by(username=self._table.at[idx, "username"]).first()
-
-        if not user:
-            raise UserException("Invalid user!")
-
+        user = self[idx]
         self.session.delete(user)
         self.session.commit()
 
@@ -80,12 +79,7 @@ class Users(SQLAlchemy):
 
     @property
     def table(self) -> DataFrame:
-        table = self._table
-
-        table.pop("id")
-        table.pop("password")
-
-        return table
+        return self._table.drop(["id", "password"], axis=1)
 
     @property
     def columns(self) -> list:
@@ -98,7 +92,7 @@ class Users(SQLAlchemy):
     # ------------------------------ User Management ----------------------------- #
 
     def login(self, form: dict) -> None:
-        user = User.query.filter_by(username=form["username"]).first()
+        user = self[form["username"]]
         if not user:
             raise UserException("Invalid user!")
 
@@ -111,7 +105,7 @@ class Users(SQLAlchemy):
         logout_user()
 
     def change_password(self, form: dict) -> None:
-        user = User.query.filter_by(username=current_user.username).first()
+        user = self[current_user.username]
         if not user:
             raise UserException("Invalid user!")
 
@@ -124,7 +118,7 @@ class Users(SQLAlchemy):
         self.session.commit()
 
     def reset_password(self, idx: int, form: dict) -> None:
-        user = User.query.filter_by(username=self._table.at[idx, "username"]).first()
+        user = self[idx]
         if not user:
             raise UserException("Invalid user!")
 
@@ -133,28 +127,6 @@ class Users(SQLAlchemy):
 
         user.password = generate_password_hash(form["password_new"])
         self.session.commit()
-
-    # ------------------------------ Import / Export ----------------------------- #
-
-    @property
-    def list_view(self) -> dict:
-        users = dict.fromkeys([user.username for user in User.query.all()])
-        for username in users:
-            last_submission = None
-
-            for category in Data.categories:
-                for type in Data.categories[category]:
-                    with Data(category, type, username) as data:
-                        if "Date" not in data._table:
-                            continue
-
-                        if not last_submission:
-                            last_submission = data._table["Date"].max()
-                        else:
-                            last_submission = max(last_submission, data._table["Date"].max())
-            users[username] = last_submission
-
-        return users
 
 users = Users()
 

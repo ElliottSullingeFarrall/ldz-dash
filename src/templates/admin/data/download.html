@@ -12,7 +12,9 @@
         {% for category in categories %}
         <optgroup label="{{ category|capitalize }}">
           {% for subcategory in categories[category] %}
-          <option value="{{ category }}:{{ subcategory }}">{{ subcategory|upper }}</option>
+          <option value="{{ category }}:{{ subcategory }}">
+            {{ subcategory|upper }}
+          </option>
           {% endfor %}
         </optgroup>
         {% endfor %}
@@ -22,13 +24,7 @@
   <div class="row">
     <div>
       <label>Users:</label>
-      <select name="users" id="users" multiple required>
-        {% for username in users %}
-        <option value="{{ username }}">
-          {{ username }} ({{ users[username] }})
-        </option>
-        {% endfor %}
-      </select>
+      <select name="users" id="users" multiple required></select>
     </div>
   </div>
 
@@ -36,17 +32,11 @@
 </form>
 
 <script>
-  const month_select = document.querySelector("input[name='month']");
+  const monthSelect = document.querySelector("input[name='month']");
   const date = new Date();
   const year = date.getFullYear();
   const month = ("0" + (date.getMonth() + 1)).slice(-2);
-  month_select.value = `${year}-${month}`;
-
-  function redirect() {
-    setTimeout(() => {
-      window.location.href = "{{ url_for('root.home.index') }}";
-    }, 50); // delay (ms) | Local: > 25 | Production: > 50
-  }
+  monthSelect.value = `${year}-${month}`;
 
   $("#users").multiselect({
     includeSelectAllOption: true,
@@ -55,5 +45,43 @@
     nSelectedText: "Selected",
     allSelectedText: "All Selected",
   });
+
+  function redirect() {
+    setTimeout(() => {
+      window.location.href = "{{ url_for('root.home.index') }}";
+    }, 50); // delay (ms) | Local: > 25 | Production: > 50
+  }
+
+  const typeSelect = document.querySelector(
+    "select[name='category:subcategory']",
+  );
+
+  function dates() {
+    const [category, subcategory] = typeSelect.value.split(":");
+
+    let url =
+      "{{ url_for('.dates', category='category', subcategory='subcategory') }}";
+    url = url.replace("category", category);
+    url = url.replace("subcategory", subcategory);
+
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        const usersSelect = document.getElementById("users");
+        usersSelect.innerHTML = ""; // Clear existing options
+
+        Object.keys(data).forEach((username) => {
+          const option = document.createElement("option");
+          option.value = username;
+          option.textContent = username + " (" + data[username] + ")";
+          usersSelect.appendChild(option);
+        });
+
+        $("#users").multiselect("rebuild");
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+  typeSelect.addEventListener("change", dates);
+  document.addEventListener("DOMContentLoaded", dates);
 </script>
 {% endblock %}

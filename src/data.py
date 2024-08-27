@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from calendar import month_abbr
-from datetime import datetime
 from html import unescape
 from types import TracebackType
 from typing import Optional
@@ -41,6 +39,9 @@ class Data:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             self._table = DataFrame()
 
+        if not self.empty:
+            self._table["Date"] = to_datetime(self._table["Date"])
+
     def __enter__(self) -> Data:
         return self
 
@@ -49,11 +50,26 @@ class Data:
 
     def append(self, row: dict) -> None:
         self._table = concat([DataFrame(row, index=[0]), self._table], ignore_index=True)
+        self._table["Date"] = to_datetime(self._table["Date"])
         self._table.sort_values("Date", ascending=False, inplace=True)
+
+    def __getitem__(self, idx: int) -> dict:
+        return self._table.iloc[idx].to_dict()
 
     def __delitem__(self, idx: int) -> None:
         self._table = self._table.drop(idx)
         self._table.sort_values("Date", ascending=False, inplace=True)
+
+    def __len__(self) -> int:
+        return self._table.shape[0]
+
+    @property
+    def empty(self) -> bool:
+        return self._table.empty
+
+    @property
+    def table(self) -> DataFrame:
+        return self._table
 
     @property
     def columns(self) -> list:
@@ -62,37 +78,3 @@ class Data:
     @property
     def values(self) -> list:
         return self._table.values.tolist()
-
-    @classmethod
-    def pull(cls, form: dict) -> DataFrame:
-        # For exporting user data
-        dt = datetime.strptime(form["month"], "%Y-%m")
-        category, type = form["category:type"].split(":")
-        users = form.getlist("users") # type: ignore
-
-        table = DataFrame()
-        for user in users:
-            with cls(category, type, user) as data:
-                table = concat([table, data._table])
-
-        if "Date" in table:
-            table["Date"] = to_datetime(table["Date"])
-            table = table.loc[(table["Date"].dt.month == dt.month) & (table["Date"].dt.year == dt.year)]
-            table.sort_values("Date", ascending=False, inplace=True)
-
-        return table
-
-    def summarise(self, year: int) -> dict:
-        # For using data in charts
-        data = dict.fromkeys(month_abbr[1:], 0)
-
-        if not self._table.empty:
-            table = self._table.copy()
-
-            table["Date"] = to_datetime(table["Date"])
-            table = table[table["Date"].dt.year == year]
-
-            for month in data:
-                data[month] = table.loc[table["Date"].dt.strftime("%b") == month].shape[0]
-
-        return data

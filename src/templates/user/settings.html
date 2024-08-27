@@ -12,10 +12,4 @@
 
   <input value="Change" type="submit" />
 </form>
-{% with messages = get_flashed_messages() %} {% if messages %}
-<ul class="flash">
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endwith %} {% endblock %}
+{% include "flash.html" %} {% endblock %}

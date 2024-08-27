@@ -1,3 +1,4 @@
+from calendar import month_abbr
 from os.path import join
 
 from flask import Blueprint, jsonify, render_template
@@ -14,11 +15,17 @@ home = Blueprint("home", __name__, url_prefix="/home")
 def index() -> View:
     return render_template(join(TEMPLATES_DIR, "index.html"))
 
-@home.route("/charts/<category>/<subcategory>/<int:year>", methods=["GET"])
+@home.route("/charts/<category>/<subcategory>/<int:year>")
 @login_required
 def charts(category: str, subcategory: str, year: int) -> View:
+    chart_data = dict.fromkeys(month_abbr[1:], 0)
+
     with Data(category, subcategory) as data:
-        chart_data = data.summarise(year)
+        if not data.empty:
+            table = data.table[data.table["Date"].dt.year == year]
+
+            for month in chart_data:
+                chart_data[month] = table.loc[table["Date"].dt.strftime("%b") == month].shape[0]
 
     trace = {
         "x": list(chart_data.keys()),

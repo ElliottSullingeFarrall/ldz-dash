@@ -11,15 +11,8 @@
   <input
     value="Remove"
     type="button"
-    onclick="`window.location"
-    ="{{ url_for('.remove', idx=idx) }}"
-    `
+    onclick='window.location="{{ url_for('.remove', idx=idx) }}"'
   />
 </form>
-{% with messages = get_flashed_messages() %} {% if messages %}
-<ul class="flash">
-  {% for message in messages %}
-  <li>{{ message }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endwith %} {% endblock %}
+{% include "flash.html" %}
+{% endblock %}
